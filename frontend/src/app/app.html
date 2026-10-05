@@ -1,0 +1,42 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button routerLink="/" class="brand">
+    <mat-icon>diamond</mat-icon>
+    <span>Malaquita</span>
+  </button>
+
+  <button mat-button routerLink="/">Tienda</button>
+
+  <span class="spacer"></span>
+
+  @if (esAutenticado()) {
+    <button mat-button routerLink="/pedidos">
+      <mat-icon>receipt_long</mat-icon>
+      Mis pedidos
+    </button>
+    @if (esAdmin()) {
+      <button mat-button routerLink="/admin">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin
+      </button>
+    }
+    <span class="usuario">
+      <mat-icon>account_circle</mat-icon>
+      {{ nombreUsuario()?.nombre ?? '' }}
+    </span>
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Salir
+    </button>
+  } @else {
+    <button mat-button routerLink="/login">Ingresar</button>
+    <button mat-raised-button routerLink="/registro">Crear cuenta</button>
+  }
+
+  <button mat-icon-button routerLink="/carrito" aria-label="Ver carrito" class="cart">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+</mat-toolbar>
+
+<main class="contenido">
+  <router-outlet />
+</main>

@@ -1,0 +1,26 @@
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.crear {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.crear mat-form-field {
+  flex: 0 0 320px;
+}
+
+mat-card {
+  padding: 16px;
+}
+
+.sin-datos {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 16px;
+}

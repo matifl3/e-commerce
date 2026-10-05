@@ -1,0 +1,29 @@
+<div class="encabezado">
+  <h1>Catálogo</h1>
+</div>
+
+@if (cargando()) {
+  <div class="centro"><mat-spinner /></div>
+} @else if (productos().length === 0) {
+  <p>No hay productos disponibles.</p>
+} @else {
+  <div class="grid">
+    @for (p of productos(); track p.id) {
+      <mat-card class="producto">
+        @if (imagenPrincipal(p); as img) {
+          <img mat-card-image [src]="img" [alt]="p.nombre" (error)="ocultarImagen($event)" />
+        }
+        <mat-card-content>
+          <h2>{{ p.nombre }}</h2>
+          <p class="categoria">{{ p.categoria.nombre }}</p>
+          <p class="precio">{{ formatPeso(p.precioBase) }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-flat-button color="primary" [routerLink]="['/productos', p.id]">
+            Ver detalle
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

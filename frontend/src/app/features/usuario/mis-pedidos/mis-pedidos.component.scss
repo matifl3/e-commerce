@@ -1,0 +1,48 @@
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.vacio {
+  padding: 32px;
+  text-align: center;
+}
+
+.vacio p {
+  margin-bottom: 16px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chip.pendiente {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.chip.pagado {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.chip.enviado {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.chip.entregado {
+  background: green;
+  color: white;
+}
+
+.chip.cancelado {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}

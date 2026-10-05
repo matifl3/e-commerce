@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 4px;
+}
+
+.brand {
+  font-weight: 600;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 8px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cart {
+  margin-left: 4px;
+}
+
+.contenido {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}

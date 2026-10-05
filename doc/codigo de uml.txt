@@ -1,0 +1,118 @@
+@startuml
+skinparam style strictuml
+skinparam packageStyle rectangle
+
+' Colores para diferenciar capas
+skinparam class {
+    BackgroundColor<<Controller>> #E2F0D9
+    BackgroundColor<<Service>> #FFF2CC
+    BackgroundColor<<Repository>> #D9E1F2
+}
+
+package "Capa Web / HTTP (Controllers)" {
+    class AuthController <<Controller>>
+    class ProductoController <<Controller>>
+    class CarritoController <<Controller>>
+    class PedidoController <<Controller>>
+    class UsuarioController <<Controller>>
+    class CategoriaController <<Controller>>
+    class EstadisticaController <<Controller>>
+    
+    note right of ProductoController: Reciben las peticiones del frontend\n(GET, POST, PUT, DELETE)
+    note right of AuthController: Registro y login.\nDevuelve el token JWT + datos del usuario.
+    note right of EstadisticaController: Endpoints del dashboard, solo accesibles\npara usuarios con rol ADMIN
+}
+
+package "Capa de Negocio (Services)" {
+    class ProductoService <<Service>>
+    class CarritoService <<Service>>
+    class PedidoService <<Service>>
+    class UsuarioService <<Service>>
+    class CategoriaService <<Service>>
+    class EstadisticaService <<Service>>
+    
+    note right of CarritoService: Contienen la lógica, validan reglas\ny agrupan a las entidades hijas.
+    note right of EstadisticaService: Calcula métricas del dashboard.\nPor regla de Agregados (regla 29) NO inyecta\nrepos ajenos: llama a los Services de cada\nagregado (PedidoService, ProductoService, etc.).
+}
+
+package "Capa de Configuracion (Seguridad)" {
+    class JwtService <<Config>>
+    class SecurityConfig <<Config>>
+    class CarritoAbandonadoScheduler <<Config>>
+    
+    note right of JwtService: Genera y valida tokens JWT\n(HS256, Nimbus JOSE).
+    note right of SecurityConfig: Configura rutas publicas, autenticadas\ny /api/estadisticas solo ADMIN.
+    note right of CarritoAbandonadoScheduler: Scheduler diario (@Scheduled):\nmarca carritos ACTIVO viejos como ABANDONADO\n(propiedad app.carrito.abandonado-dias).
+}
+
+package "Capa de Acceso a Datos (Repositories)" {
+    package "Agregado Producto" {
+        class CategoriaRepository <<Repository>>
+        class ColorRepository <<Repository>>
+        class TalleRepository <<Repository>>
+        class ProductoRepository <<Repository>>
+        class ProductoVariacionRepository <<Repository>>
+        class ImagenProductoRepository <<Repository>>
+        class ProductoVisitaRepository <<Repository>>
+    }
+    
+    package "Agregado Carrito" {
+        class CarritoRepository <<Repository>>
+        class CarritoItemRepository <<Repository>>
+    }
+    
+    package "Agregado Pedido" {
+        class PedidoRepository <<Repository>>
+        class PedidoDetalleRepository <<Repository>>
+    }
+    
+    package "Agregado Usuario" {
+        class UsuarioRepository <<Repository>>
+    }
+}
+
+' Relaciones HTTP -> Service
+AuthController ..> UsuarioService
+AuthController ..> JwtService
+ProductoController ..> ProductoService
+CarritoController ..> CarritoService
+PedidoController ..> PedidoService
+UsuarioController ..> UsuarioService
+CategoriaController ..> CategoriaService
+EstadisticaController ..> EstadisticaService
+
+' Relaciones Service -> Repositories
+ProductoService --> ProductoRepository
+ProductoService --> ProductoVariacionRepository
+ProductoService --> ImagenProductoRepository
+ProductoService --> CategoriaRepository
+ProductoService --> ColorRepository
+ProductoService --> TalleRepository
+ProductoService --> ProductoVisitaRepository
+
+CategoriaService --> CategoriaRepository
+
+CarritoService --> CarritoRepository
+CarritoService --> CarritoItemRepository
+
+PedidoService --> PedidoRepository
+PedidoService --> PedidoDetalleRepository
+
+UsuarioService --> UsuarioRepository
+
+' Estadisticas -> Services de cada agregado (regla 29: no usa repos ajenos)
+EstadisticaService ..> PedidoService : "totalesVentas(), topProductos()"
+EstadisticaService ..> ProductoService : "productoMasVisto(), stockBajo(), inventario()"
+EstadisticaService ..> UsuarioService : "usuariosRegistrados(), nuevosPorMes()"
+EstadisticaService ..> CarritoService : "carritosAbandonados(), conversion()"
+
+' Dependencia entre servicios (Ej: Pedido necesita vaciar el carrito y restar stock)
+PedidoService ..> CarritoService : "vincularUsuarioSiAnonimo(), marcarCompletado(), vaciarCarrito()"
+PedidoService ..> ProductoService : "descontarStock(), restituirStock()"
+PedidoService ..> UsuarioService : "obtenerUsuario()"
+CarritoService ..> ProductoService : "validarStock()"
+CarritoService ..> UsuarioService : "obtenerUsuario()"
+CategoriaService ..> ProductoService : "contarProductosPorCategoria()"
+CarritoAbandonadoScheduler ..> CarritoService : "marcarAbandonados()"
+
+@enduml

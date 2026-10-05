@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Ajustar stock</h2>
+<mat-dialog-content>
+  <p>
+    <strong>{{ data.nombre }}</strong> · {{ data.colorNombre }} · Talle {{ data.talleNombre }}
+    <br />
+    SKU: {{ data.sku }}
+  </p>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Nuevo stock</mat-label>
+    <input matInput type="number" min="0" [(ngModel)]="nuevoStock" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]>Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()">Guardar</button>
+</mat-dialog-actions>

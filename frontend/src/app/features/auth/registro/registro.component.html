@@ -1,0 +1,44 @@
+<mat-card class="tarjeta">
+  <mat-card-header>
+    <mat-card-title>Crear cuenta</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="fila">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="nombre" name="nombre" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Apellido</mat-label>
+        <input matInput [(ngModel)]="apellido" name="apellido" required />
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="email" name="email" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="password" name="password" minlength="6" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Teléfono (opcional)</mat-label>
+      <input matInput [(ngModel)]="telefono" name="telefono" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Dirección (opcional)</mat-label>
+      <input matInput [(ngModel)]="direccion" name="direccion" />
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button color="primary" class="full" [disabled]="enviando" (click)="registrar()">
+      {{ enviando ? 'Creando...' : 'Crear cuenta' }}
+    </button>
+  </mat-card-actions>
+  <mat-card-footer>
+    <p>
+      ¿Ya tenés cuenta?
+      <a routerLink="/login">Iniciar sesión</a>
+    </p>
+  </mat-card-footer>
+</mat-card>

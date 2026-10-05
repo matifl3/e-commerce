@@ -1,0 +1,77 @@
+<h1>Mi carrito</h1>
+
+@if (cargando()) {
+  <div class="centro"><mat-spinner /></div>
+} @else if (carrito(); as c) {
+  @if (c.items.length === 0) {
+    <div class="vacio">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Tu carrito está vacío.</p>
+      <button mat-flat-button color="primary" routerLink="/">Ir a la tienda</button>
+    </div>
+  } @else {
+    <div class="contenido">
+      <mat-card class="items">
+        @for (item of c.items; track item.id) {
+          <div class="item">
+            <div class="detalle">
+              <strong>{{ item.productoNombre }}</strong>
+              <p>
+                {{ item.colorNombre }} · Talle {{ item.talleNombre }} · {{ formatPeso(item.precioUnitario) }}
+              </p>
+            </div>
+            <div class="cantidad">
+              <button mat-icon-button (click)="cambiarCantidad(item.id, -1)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span>{{ item.cantidad }}</span>
+              <button mat-icon-button (click)="cambiarCantidad(item.id, 1)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <p class="subtotal">{{ formatPeso(item.subtotal) }}</p>
+            <button mat-icon-button (click)="quitar(item.id)" aria-label="Quitar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+        <div class="total">
+          <strong>Total</strong>
+          <strong>{{ formatPeso(c.total) }}</strong>
+        </div>
+      </mat-card>
+
+      <mat-card class="checkout">
+        <h2>Finalizar compra</h2>
+        @if (esAutenticado()) {
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Dirección de envío</mat-label>
+            <textarea matInput rows="2" [(ngModel)]="direccion" name="direccion" required></textarea>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Método de pago</mat-label>
+            <mat-select [(ngModel)]="metodoPago" name="metodo">
+              @for (m of metodos; track m) {
+                <mat-option [value]="m">{{ m }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            class="full"
+            [disabled]="confirmando() || direccion.trim() === ''"
+            (click)="confirmarPedido()"
+          >
+            {{ confirmando() ? 'Procesando...' : 'Confirmar pedido' }}
+          </button>
+        } @else {
+          <p>Necesitás iniciar sesión para finalizar la compra.</p>
+          <button mat-flat-button color="primary" routerLink="/login" [queryParams]="{ from: '/carrito' }">
+            Iniciar sesión
+          </button>
+        }
+      </mat-card>
+    </div>
+  }
+}

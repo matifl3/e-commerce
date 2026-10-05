@@ -1,0 +1,38 @@
+.fila {
+  display: flex;
+  gap: 12px;
+}
+
+.full {
+  width: 100%;
+}
+
+h3 {
+  margin-top: 16px;
+}
+
+.variacion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.variacion mat-form-field {
+  flex: 1;
+}
+
+.variacion .stock-input {
+  flex: 0 0 90px;
+}
+
+.variacion .sku-input {
+  flex: 0 0 140px;
+}
+
+.imagen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}

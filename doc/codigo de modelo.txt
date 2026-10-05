@@ -1,0 +1,143 @@
+@startuml
+
+entity Usuario {
+  * id : int
+  --
+  nombre : varchar
+  apellido : varchar
+  email : varchar
+  password : varchar
+  telefono : varchar
+  direccion : varchar
+  rol : varchar
+  fecha_creacion : datetime
+}
+
+entity Categoria {
+  * id : int
+  --
+  nombre : varchar
+}
+
+entity Color {
+  * id : int
+  --
+  nombre : varchar
+  codigo_hex : varchar
+}
+
+entity Talle {
+  * id : int
+  --
+  nombre : varchar
+  orden : int
+}
+
+entity Producto {
+  * id : int
+  --
+  categoria_id : int
+  nombre : varchar
+  descripcion : text
+  precio_base : decimal
+  activo : boolean
+}
+
+entity Imagen_Producto {
+  * id : int
+  --
+  producto_id : int
+  color_id : int <<nullable>>
+  url_imagen : varchar
+  orden : int
+  es_principal : boolean
+}
+
+entity Producto_Variacion {
+  * id : int
+  --
+  producto_id : int
+  color_id : int
+  talle_id : int
+  stock : int
+  sku : varchar <<unique>>
+}
+
+entity Carrito {
+  * id : int
+  --
+  usuario_id : int <<nullable>>
+  session_id : varchar
+  estado : varchar
+  fecha_creacion : datetime
+  fecha_modificacion : datetime
+}
+
+entity Carrito_Item {
+  * id : int
+  --
+  carrito_id : int
+  producto_variacion_id : int
+  cantidad : int
+}
+
+entity Pedido {
+  * id : int
+  --
+  usuario_id : int
+  carrito_id : int
+  fecha_pedido : datetime
+  fecha_modificacion : datetime
+  total : decimal
+  estado : varchar
+  direccion_envio : varchar
+  metodo_pago : varchar
+}
+
+entity Pedido_Detalle {
+  * id : int
+  --
+  pedido_id : int
+  producto_variacion_id : int
+  cantidad : int
+  precio_unitario : decimal
+}
+
+entity Producto_Visita {
+  * id : int
+  --
+  producto_id : int
+  fecha_visita : datetime
+  sesion_id : varchar
+}
+
+' Relaciones principales
+Usuario ||--o{ Pedido
+Categoria ||--o{ Producto
+Producto ||--o{ Producto_Variacion
+Producto ||--o{ Imagen_Producto
+Pedido ||--|{ Pedido_Detalle
+Producto_Variacion ||--o{ Pedido_Detalle
+
+' Relacion de visitas (para estadisticas de "producto mas visto")
+Producto ||--o{ Producto_Visita
+
+' Relaciones de Color y Talle
+Color ||--o{ Producto_Variacion
+Color |o--o{ Imagen_Producto
+Talle ||--o{ Producto_Variacion
+
+note right of Producto_Variacion: UNIQUE (producto_id, color_id, talle_id)\npara evitar variaciones duplicadas
+
+' Relaciones del Carrito
+Usuario |o--o{ Carrito
+Carrito ||--|{ Carrito_Item
+Producto_Variacion ||--o{ Carrito_Item
+
+' Relacion Carrito -> Pedido
+Carrito |o--o{ Pedido
+note top of Carrito: Un carrito puede generar\nun pedido al concretar la compra
+
+
+
+@enduml

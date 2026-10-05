@@ -1,0 +1,32 @@
+.volver {
+  margin-bottom: 16px;
+}
+
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.datos {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.info {
+  flex: 1 1 260px;
+  align-self: flex-start;
+  padding: 16px;
+}
+
+.items {
+  flex: 2 1 480px;
+  padding: 16px;
+}
+
+.total {
+  text-align: right;
+  font-size: 18px;
+  margin-top: 12px;
+}

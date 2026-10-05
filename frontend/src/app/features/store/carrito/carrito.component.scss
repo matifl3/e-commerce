@@ -1,0 +1,80 @@
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 0;
+}
+
+.vacio mat-icon {
+  font-size: 56px;
+  height: 56px;
+  width: 56px;
+  opacity: 0.4;
+}
+
+.contenido {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.items {
+  flex: 2 1 480px;
+}
+
+.checkout {
+  flex: 1 1 300px;
+  align-self: flex-start;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.detalle {
+  flex: 1;
+}
+
+.detalle p {
+  margin: 4px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cantidad {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cantidad span {
+  min-width: 20px;
+  text-align: center;
+}
+
+.subtotal {
+  min-width: 110px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  font-size: 18px;
+}
+
+.full {
+  width: 100%;
+}

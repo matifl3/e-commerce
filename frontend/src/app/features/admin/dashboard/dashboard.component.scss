@@ -1,0 +1,49 @@
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpis mat-card {
+  padding: 16px;
+}
+
+.kpi-nombre {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+  margin: 0;
+}
+
+.kpi-valor {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.kpi-detalle {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+  margin: 0;
+}
+
+.tabla {
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.sin-datos {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 16px;
+}
+
+mat-form-field {
+  min-width: 130px;
+}

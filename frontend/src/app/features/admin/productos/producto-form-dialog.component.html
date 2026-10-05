@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>{{ data.producto ? 'Editar producto' : 'Nuevo producto' }}</h2>
+<mat-dialog-content>
+  <div class="fila">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="nombre" name="nombre" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Categoría</mat-label>
+      <mat-select [(ngModel)]="categoriaId" name="categoria" required>
+        @for (c of data.categorias; track c.id) {
+          <mat-option [value]="c.id">{{ c.nombre }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Descripción</mat-label>
+    <textarea matInput rows="2" [(ngModel)]="descripcion" name="descripcion"></textarea>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Precio base (ARS)</mat-label>
+    <input matInput type="number" min="1" [(ngModel)]="precioBase" name="precio" required />
+  </mat-form-field>
+  <mat-checkbox [(ngModel)]="activo" name="activo">Producto activo</mat-checkbox>
+
+  <h3>Variaciones (color + talle)</h3>
+  @for (v of variaciones(); track i; let i = $index) {
+    <div class="variacion">
+      <mat-form-field appearance="outline">
+        <mat-select [(ngModel)]="v.colorId" [name]="'color' + i" placeholder="Color">
+          @for (c of data.colores; track c.id) {
+            <mat-option [value]="c.id">{{ c.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-select [(ngModel)]="v.talleId" [name]="'talle' + i" placeholder="Talle">
+          @for (t of data.talles; track t.id) {
+            <mat-option [value]="t.id">{{ t.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="stock-input">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" min="0" [(ngModel)]="v.stock" [name]="'stock' + i" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="sku-input">
+        <mat-label>SKU</mat-label>
+        <input matInput [(ngModel)]="v.sku" [name]="'sku' + i" />
+      </mat-form-field>
+      <button mat-icon-button (click)="quitarVariacion(i)" aria-label="Quitar variación">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+  <button mat-button (click)="agregarVariacion()">
+    <mat-icon>add</mat-icon>
+    Agregar variación
+  </button>
+
+  <h3>Imágenes</h3>
+  @for (img of imagenes(); track i; let i = $index) {
+    <div class="imagen">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>URL de imagen</mat-label>
+        <input matInput [(ngModel)]="img.urlImagen" [name]="'url' + i" />
+      </mat-form-field>
+      <mat-checkbox [(ngModel)]="img.esPrincipal" [name]="'principal' + i">Principal</mat-checkbox>
+      <button mat-icon-button (click)="quitarImagen(i)" aria-label="Quitar imagen">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+  <button mat-button (click)="agregarImagen()">
+    <mat-icon>add</mat-icon>
+    Agregar imagen
+  </button>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]>Cancelar</button>
+  <button mat-flat-button color="primary" [disabled]="!puedeGuardar()" (click)="guardar()">
+    Guardar
+  </button>
+</mat-dialog-actions>

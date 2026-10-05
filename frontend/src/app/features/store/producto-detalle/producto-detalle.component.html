@@ -1,0 +1,80 @@
+<button mat-button routerLink="/" class="volver">
+  <mat-icon>arrow_back</mat-icon>
+  Volver al catálogo
+</button>
+
+@if (cargando()) {
+  <div class="centro"><mat-spinner /></div>
+} @else if (producto(); as p) {
+  <mat-card class="detalle">
+    <div class="fila">
+      <div class="galeria">
+        @for (img of p.imagenes; track img.id) {
+          <img [src]="img.urlImagen" [alt]="p.nombre" class="foto" />
+        }
+      </div>
+
+      <div class="info">
+        <h1>{{ p.nombre }}</h1>
+        <p class="marca">{{ p.categoria.nombre }}</p>
+        <p class="precio">{{ formatPeso(p.precioBase) }}</p>
+        <p class="descripcion">{{ p.descripcion ?? 'Sin descripción.' }}</p>
+
+        <h3>Color</h3>
+        <div class="opciones">
+          @for (c of colores(); track c.id) {
+            <button
+              mat-raised-button
+              [class.seleccionado]="colorId() === c.id"
+              (click)="selectColor(c.id)"
+            >
+              {{ c.nombre }}
+            </button>
+          }
+        </div>
+
+        @if (colorId() != null) {
+          <h3>Talle</h3>
+          <div class="opciones">
+            @for (t of talles(); track t.id) {
+              <button
+                mat-raised-button
+                [disabled]="!hayStock(t)"
+                [class.seleccionado]="talleId() === t.id"
+                (click)="selectTalle(t.id)"
+              >
+                {{ t.talleNombre }}
+              </button>
+            }
+          </div>
+        }
+
+        @if (variacionSeleccionada(); as v) {
+          <p class="stock" [class.si-hay]="hayStock(v)">
+            {{ hayStock(v) ? 'Stock disponible: ' + v.stock : 'Sin stock' }}
+          </p>
+          <div class="cantidad">
+            <button mat-icon-button (click)="decrementar()" [disabled]="cantidad() <= 1">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{ cantidad() }}</span>
+            <button mat-icon-button (click)="incrementar()" [disabled]="cantidad() >= v.stock">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!hayStock(v) || agregando()"
+            (click)="agregarAlCarrito()"
+          >
+            <mat-icon>add_shopping_cart</mat-icon>
+            Agregar al carrito
+          </button>
+        }
+      </div>
+    </div>
+  </mat-card>
+} @else {
+  <p>No se encontró el producto.</p>
+}

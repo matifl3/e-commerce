@@ -1,0 +1,163 @@
+@if (cargando()) {
+  <div class="centro"><mat-spinner /></div>
+} @else {
+  <div class="kpis">
+    <mat-card>
+      <p class="kpi-nombre">Ventas totales</p>
+      <p class="kpi-valor">{{ formatPeso(vendido().montoTotal) }}</p>
+      <p class="kpi-detalle">{{ vendido().cantidadPedidos }} pedidos</p>
+    </mat-card>
+    <mat-card>
+      <p class="kpi-nombre">Usuarios registrados</p>
+      <p class="kpi-valor">{{ usuarios() }}</p>
+    </mat-card>
+    <mat-card>
+      <p class="kpi-nombre">Carritos abandonados</p>
+      <p class="kpi-valor">{{ carritosAbandonados() }}</p>
+    </mat-card>
+    <mat-card>
+      <p class="kpi-nombre">Conversión</p>
+      <p class="kpi-valor">{{ conversion().tasaPorcentaje }}%</p>
+      <p class="kpi-detalle">{{ conversion().carritosCompletados }} completados</p>
+    </mat-card>
+  </div>
+
+  <mat-tab-group>
+    <mat-tab label="Pedidos">
+      <mat-card class="tabla">
+        <table mat-table [dataSource]="pedidos()">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>N°</th>
+            <td mat-cell *matCellDef="let p">#{{ p.id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="usuario">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let p">{{ p.usuarioId }}</td>
+          </ng-container>
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let p">{{ formatFecha(p.fechaPedido) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let p">{{ formatPeso(p.total) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let p">
+              <mat-form-field appearance="outline">
+                <mat-select [value]="p.estado" (selectionChange)="cambiarEstado(p, $event.value)">
+                  @for (e of estados; track e) {
+                    <mat-option [value]="e">{{ e }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colPedidos"></tr>
+          <tr mat-row *matRowDef="let row; columns: colPedidos"></tr>
+        </table>
+        @if (pedidos().length === 0) {
+          <p class="sin-datos">No hay pedidos todavía.</p>
+        }
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Top productos">
+      <mat-card class="tabla">
+        <table mat-table [dataSource]="top()">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Producto</th>
+            <td mat-cell *matCellDef="let t">{{ t.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="unidades">
+            <th mat-header-cell *matHeaderCellDef>Unidades</th>
+            <td mat-cell *matCellDef="let t">{{ t.unidadesVendidas }}</td>
+          </ng-container>
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let t">{{ formatPeso(t.totalVendido) }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colTop"></tr>
+          <tr mat-row *matRowDef="let row; columns: colTop"></tr>
+        </table>
+        @if (top().length === 0) {
+          <p class="sin-datos">Sin datos.</p>
+        }
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Más vistos">
+      <mat-card class="tabla">
+        <table mat-table [dataSource]="vistos()">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Producto</th>
+            <td mat-cell *matCellDef="let v">{{ v.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="visitas">
+            <th mat-header-cell *matHeaderCellDef>Visitas</th>
+            <td mat-cell *matCellDef="let v">{{ v.visitas }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colVistos"></tr>
+          <tr mat-row *matRowDef="let row; columns: colVistos"></tr>
+        </table>
+        @if (vistos().length === 0) {
+          <p class="sin-datos">Sin datos.</p>
+        }
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Stock bajo">
+      <mat-card class="tabla">
+        <table mat-table [dataSource]="stockBajo()">
+          <ng-container matColumnDef="producto">
+            <th mat-header-cell *matHeaderCellDef>Producto</th>
+            <td mat-cell *matCellDef="let s">{{ s.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="variante">
+            <th mat-header-cell *matHeaderCellDef>Variante</th>
+            <td mat-cell *matCellDef="let s">{{ s.colorNombre }} · {{ s.talleNombre }} ({{ s.sku }})</td>
+          </ng-container>
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef>Stock</th>
+            <td mat-cell *matCellDef="let s">{{ s.stock }} / umbral {{ s.umbral }}</td>
+          </ng-container>
+          <ng-container matColumnDef="accion">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let s">
+              <button mat-flat-button (click)="ajustarStock(s)">
+                <mat-icon>edit</mat-icon>
+                Ajustar
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colStock"></tr>
+          <tr mat-row *matRowDef="let row; columns: colStock"></tr>
+        </table>
+        @if (stockBajo().length === 0) {
+          <p class="sin-datos">Sin alertas de stock.</p>
+        }
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Altas de usuarios">
+      <mat-card class="tabla">
+        <table mat-table [dataSource]="nuevos()">
+          <ng-container matColumnDef="mes">
+            <th mat-header-cell *matHeaderCellDef>Mes</th>
+            <td mat-cell *matCellDef="let n">{{ n.mes }}</td>
+          </ng-container>
+          <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef>Nuevos usuarios</th>
+            <td mat-cell *matCellDef="let n">{{ n.cantidad }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colNuevos"></tr>
+          <tr mat-row *matRowDef="let row; columns: colNuevos"></tr>
+        </table>
+        @if (nuevos().length === 0) {
+          <p class="sin-datos">Sin datos.</p>
+        }
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+}

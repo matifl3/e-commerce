@@ -1,0 +1,42 @@
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.producto {
+  display: flex;
+  flex-direction: column;
+}
+
+.producto img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.categoria {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+}
+
+.precio {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+mat-card-actions {
+  margin-top: auto;
+}

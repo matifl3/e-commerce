@@ -1,0 +1,75 @@
+.volver {
+  margin-bottom: 16px;
+}
+
+.centro {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.fila {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.galeria {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.foto {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.info {
+  flex: 1 1 360px;
+}
+
+.precio {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.descripcion {
+  margin-bottom: 16px;
+}
+
+.opciones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.seleccionado {
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+.stock {
+  font-weight: 500;
+}
+
+.si-hay {
+  color: var(--mat-sys-tertiary);
+}
+
+.cantidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.cantidad span {
+  font-size: 18px;
+  min-width: 28px;
+  text-align: center;
+}
